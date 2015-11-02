@@ -7,12 +7,12 @@
 
 function glasshouse_acf_wysiwyg_js()
 {
-    wp_enqueue_script('glasshouseacfjs',plugins_url('/assets/acf-wysiwyg.js', __FILE__ ));
+    wp_enqueue_script('glasshouseacfjs',plugins_url('/assets/acf-wysiwyg.js', __FILE__ ), array('acf-input') );
 }
 
 function glasshouse_acf_wysiwyg_theme_setup()
 { 
-    add_editor_style('css/tinymce.css');
+    add_editor_style('prod/css/tinymce.css');
 }
 
 add_action('admin_enqueue_scripts','glasshouse_acf_wysiwyg_js');
