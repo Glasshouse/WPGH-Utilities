@@ -116,12 +116,18 @@ if (!function_exists('wpml_get_translation')) {
                 AND icl1.element_type = '{$element_type}'
                 WHERE icl2.element_id = {$element_id} 
                 ";
-                if(!empty($language_code)){
-                    $sql.=" AND icl1.language_code = '{$language_code}'";
-                }
                 
-        $translated_id = $wpdb->get_var($sql);
-            
-        return $translated_id ? $translated_id : $element_id;
+        if(!empty($language_code)){ //fonction d'origine
+            $sql.=" AND icl1.language_code = '{$language_code}'";
+            $translated_id = $wpdb->get_var($sql);
+            return $translated_id ? $translated_id : $element_id;
+        }                
+        //fonction etendue a get_all translation of
+        $results = $wpdb->get_results($sql);
+        $ret = array();
+        foreach ($results as $object) {
+            array_push($ret, $object->element_id);
+        }
+        return $ret;
     }
 }
