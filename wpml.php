@@ -106,3 +106,19 @@ function getLanguageSwitcherItems()
 
     return $languageSwitcherItems;
 }
+
+if (!function_exists('wpml_get_translation')) {
+    function wpml_get_translation($element_id, $element_type, $language_code) {
+        global $wpdb;
+        $sql = "SELECT icl1.element_id
+                FROM `{$wpdb->prefix}icl_translations` icl1
+                LEFT JOIN `{$wpdb->prefix}icl_translations` icl2 ON icl1.trid = icl2.trid
+                AND icl1.element_type = '{$element_type}'
+                WHERE icl1.language_code = '{$language_code}'
+                AND icl2.element_id = {$element_id}";
+                
+        $translated_id = $wpdb->get_var($sql);
+            
+        return $translated_id ? $translated_id : $element_id;
+    }
+}
