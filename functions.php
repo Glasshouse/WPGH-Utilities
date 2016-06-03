@@ -112,6 +112,9 @@ function glasshouse_filter_image_downsize($ignore = false, $attachment_id = 0, $
    $size_name = trim($size_name);
 
    $meta = wp_get_attachment_metadata($attachment_id);
+   
+   if (empty($meta))
+       return FALSE;
 
    /* the requested size does not yet exist for this attachment */
    if (
