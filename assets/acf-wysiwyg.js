@@ -6,11 +6,9 @@
 acf.add_filter('wysiwyg_tinymce_settings', function( mceInit, id ){
 
     mceInit.gOldSetup = mceInit.setup || function(){};
-    console.log(mceInit.gOldSetup);
 
     mceInit.setup = function(editor){
         editor.on('init', function(){
-            console.log(editor);
             var c = jQuery(editor.editorContainer),
                 name = c.closest('.acf-field-wysiwyg').data('name');
 
