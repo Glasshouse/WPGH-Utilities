@@ -60,16 +60,16 @@ if (!function_exists('esc_attr_url')) {
 	}
 }
 
-add_filter('wp_title', 'glasshouse_wp_title_filter', 9);
-function glasshouse_wp_title_filter($title) {
+add_filter('wp_title', 'wpgh_wp_title_filter', 9);
+function wpgh_wp_title_filter($title) {
     return strip_tags($title);
 }
 
 /**
 * Filter the single_template with our custom function
 */
-add_filter('single_template', 'glasshouse_single_template');
-function glasshouse_single_template($single) {
+add_filter('single_template', 'wpgh_single_template');
+function wpgh_single_template($single) {
 	global $post;
 
     $template = get_post_meta($post->ID, 'template', true);
@@ -97,7 +97,7 @@ if (!function_exists('wysiwyg')) {
 	}
 }
 
-function glasshouse_get_attachment_image_src($attachment_id, $size = 'thumbnail', $icon = false)
+function wpgh_get_attachment_image_src($attachment_id, $size = 'thumbnail', $icon = false)
 {
     $image = wp_get_attachment_image_src($attachment_id, $size, $icon);
     if ($image) {
@@ -116,9 +116,9 @@ function glasshouse_get_attachment_image_src($attachment_id, $size = 'thumbnail'
 * @param int $attachment_id The ID of the attachment for which we want a certain size.
 * @param string $size_name The name of the size desired.
 */
-//Custom image sizes filter
-add_filter('image_downsize', 'glasshouse_filter_image_downsize', 99, 3);
-function glasshouse_filter_image_downsize($ignore = false, $attachment_id = 0, $size_name = 'thumbnail') {
+add_filter('image_downsize', 'wpgh_filter_image_downsize', 99, 3);
+function wpgh_filter_image_downsize($ignore = false, $attachment_id = 0, $size_name = 'thumbnail')
+{
    global $_wp_additional_image_sizes;
 
    $attachment_id = (int) $attachment_id;
@@ -189,7 +189,7 @@ function glasshouse_filter_image_downsize($ignore = false, $attachment_id = 0, $
 
        if (!empty($height) && !empty($width)) {
            //echo '<b>_generate_attachment</b>';
-           $resized_path = glasshouse_generate_attachment($attachment_id, $width, $height, $crop);
+           $resized_path = wpgh_generate_attachment($attachment_id, $width, $height, $crop);
            //var_dump($resized_path);
            $fullsize_url = wp_get_attachment_url($attachment_id);
 
@@ -228,7 +228,8 @@ function glasshouse_filter_image_downsize($ignore = false, $attachment_id = 0, $
 * @param bool $crop Whether to crop the generated image.
 * @return string The full path to the cropped image.  Empty if failed.
 */
-function glasshouse_generate_attachment($attachment_id = 0, $width = 0, $height = 0, $crop = true) {
+function wpgh_generate_attachment($attachment_id = 0, $width = 0, $height = 0, $crop = true)
+{
    $attachment_id = (int) $attachment_id;
    $width = (int) $width;
    $height = (int) $height;
@@ -272,4 +273,11 @@ function glasshouse_generate_attachment($attachment_id = 0, $width = 0, $height 
    }
 
    return '';
+}
+
+
+// BC compatibility
+function glasshouse_get_attachment_image_src($attachment_id, $size = 'thumbnail', $icon = false)
+{
+	return wpgh_get_attachment_image_src($attachment_id, $size, $icon);
 }
