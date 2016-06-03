@@ -14,6 +14,9 @@
  * @copyright Copyright (c) 2015 Glasshouse
  * @link http://www.glasshouse.fr
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ * 
+ * @todo Charger wpml uniquement si le plugin WPML est activé, est-ce possible à ce stade ? 
+ * @todo Charger le script pour tinymce uniquement si le plugin ACF est activé, est-ce possible à ce stade ?
  */
 
 define('TEMPLATE_URL', get_template_directory_uri());
