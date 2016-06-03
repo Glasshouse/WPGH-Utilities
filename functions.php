@@ -1,37 +1,40 @@
 <?php
 
-/**
- *
- * @todo mettre en cache les valeurs retrouvées *
- * @global type $wpdb
- * @param type $post_id
- * @return type
- */
-function get_post_meta_all($post_id){
-    global $wpdb;
+if (!function_exists('get_post_meta_all')) {
+	/**
+	 *
+	 * @todo mettre en cache les valeurs retrouvées *
+	 * @global type $wpdb
+	 * @param type $post_id
+	 * @return type
+	 */
+	function get_post_meta_all($post_id){
+		global $wpdb;
 
-    $data = array();
+		$data = array();
 
-    $wpdb->query("
-        SELECT `meta_key`, `meta_value`
-        FROM $wpdb->postmeta
-        WHERE `post_id` = $post_id
-    ");
+		$wpdb->query("
+			SELECT `meta_key`, `meta_value`
+			FROM $wpdb->postmeta
+			WHERE `post_id` = $post_id
+		");
 
-    foreach($wpdb->last_result as $k => $v){
-        $data[$v->meta_key] =   $v->meta_value;
-    };
+		foreach($wpdb->last_result as $k => $v){
+			$data[$v->meta_key] =   $v->meta_value;
+		};
 
-    return $data;
+		return $data;
+	}
 }
 
-/**
- *
- * @global type $wpdb
- * @param type $post_id
- * @return type
- */
+
 if (!function_exists('get_post_meta_single')) {
+	/**
+	 *
+	 * @global type $wpdb
+	 * @param type $post_id
+	 * @return type
+	 */
     function get_post_meta_single($post_id = 0){
 
         $postMetas = get_post_custom($post_id);
@@ -45,9 +48,16 @@ if (!function_exists('get_post_meta_single')) {
     }
 }
 
-function esc_attr_url($string)
-{
-    return urlencode(html_entity_decode(trim(strip_tags($string))));
+if (!function_exists('esc_attr_url')) {
+	/**
+	 * 
+	 * @param string $string
+	 * @return string
+	 */
+	function esc_attr_url($string)
+	{
+		return urlencode(html_entity_decode(trim(strip_tags($string))));
+	}
 }
 
 add_filter('wp_title', 'glasshouse_wp_title_filter', 9);
@@ -71,6 +81,22 @@ function glasshouse_single_template($single) {
     return $single;
 }
 
+if (!function_exists('wysiwyg')) {
+	/**
+	 * Perform some useful stuff on some useful piece of text
+	 * 
+	 * @param string $text
+	 * @return string
+	 */
+	function wysiwyg($text)
+	{
+		$text = wpautop(do_shortcode($text));
+		// @third-party could hack into this useful stuff
+		$text = apply_filters('wpgh/wysiwyg', $text);
+		return $text;
+	}
+}
+
 function glasshouse_get_attachment_image_src($attachment_id, $size = 'thumbnail', $icon = false)
 {
     $image = wp_get_attachment_image_src($attachment_id, $size, $icon);
@@ -81,16 +107,6 @@ function glasshouse_get_attachment_image_src($attachment_id, $size = 'thumbnail'
     }
 
     return $image;
-}
-
-
-function wysiwyg($text){
-
-    $text = wpautop(do_shortcode($text));
-
-    $text = apply_filters('glasshouse/wysiwyg', $text);
-
-    return $text;
 }
 
 /**
