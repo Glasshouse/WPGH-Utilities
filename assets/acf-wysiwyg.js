@@ -10,9 +10,10 @@ acf.add_filter('wysiwyg_tinymce_settings', function( mceInit, id ){
     mceInit.setup = function(editor){
         editor.on('init', function(){
             var c = jQuery(editor.editorContainer),
-                name = c.closest('.acf-field-wysiwyg').data('name');
+                name = c.closest('.acf-field-wysiwyg').data('name'),
+                id = jQuery('#post_ID').val();
 
-            jQuery(editor.iframeElement).contents().find('body').addClass('acf_'+name);
+            jQuery(editor.iframeElement).contents().find('body').addClass('acf_'+name).addClass('id_'+id);            
 
         });
 
