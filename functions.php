@@ -90,6 +90,10 @@ if (!function_exists('wysiwyg')) {
 	 */
 	function wysiwyg($text)
 	{
+		global $wp_embed;
+
+		$text = $wp_embed->autoembed( $text );
+    $text = $wp_embed->run_shortcode( $text );
 		$text = wpautop(do_shortcode($text));
 		// @third-party could hack into this useful stuff
 		$text = apply_filters('wpgh/wysiwyg', $text);
