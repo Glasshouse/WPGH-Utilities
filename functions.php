@@ -90,15 +90,23 @@ if (!function_exists('wysiwyg')) {
 	 */
 	function wysiwyg($text)
 	{
+		if (!$text)
+			return $text;
 		global $wp_embed;
 
 		$text = $wp_embed->autoembed( $text );
-    $text = $wp_embed->run_shortcode( $text );
+		$text = $wp_embed->run_shortcode( $text );
 		$text = wpautop(do_shortcode($text));
+		$text = wpgh_prevent_new_line($text);
 		// @third-party could hack into this useful stuff
 		$text = apply_filters('wpgh/wysiwyg', $text);
 		return $text;
 	}
+}
+
+function wpgh_prevent_new_line($text)
+{
+	return preg_replace('#\s(\?|\!|\:)#', '&nbsp;$1', $text);
 }
 
 function wpgh_get_attachment_image_src($attachment_id, $size = 'thumbnail', $icon = false)
@@ -143,6 +151,7 @@ function wpgh_filter_image_downsize($ignore = false, $attachment_id = 0, $size_n
    ) {
 
        $width = $height = '?' ;
+       $crop = false;
        
        // let's first see if this is a registered size
        if (isset($_wp_additional_image_sizes[$size_name])) {

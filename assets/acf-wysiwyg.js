@@ -5,7 +5,7 @@
 
 acf.add_filter('wysiwyg_tinymce_settings', function( mceInit, id ){
 
-    mceInit.gOldSetup = mceInit.setup || function(){};
+    var gOldSetup = mceInit.setup || function(){};
 
     mceInit.setup = function(editor){
         editor.on('init', function(){
@@ -17,7 +17,7 @@ acf.add_filter('wysiwyg_tinymce_settings', function( mceInit, id ){
 
         });
 
-        mceInit.gOldSetup(editor);
+        gOldSetup(editor);
     };
 
     // return
