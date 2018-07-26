@@ -294,3 +294,36 @@ function glasshouse_get_attachment_image_src($attachment_id, $size = 'thumbnail'
 {
 	return wpgh_get_attachment_image_src($attachment_id, $size, $icon);
 }
+
+// See: http://life.co-hey.com/2013/03/advanced-custom-fields%E3%83%97%E3%83%A9%E3%82%B0%E3%82%A4%E3%83%B3%E3%81%A7%E3%83%97%E3%83%AC%E3%83%93%E3%83%A5%E3%83%BC%E3%82%82%E3%82%84%E3%82%8A%E3%81%9F%E3%81%84/
+// preview用に保存された下書き情報(post)のIDを取得する
+function get_preview_id($postId)
+{
+    global $post;
+    $previewId = 0;
+ 
+    if ( $post->ID == $postId && $_GET['preview'] == true ) {
+        // プレビュー表示の際に、自動保存されたpostの下書き情報を取得する
+        $preview = wp_get_post_autosave($postId);
+        if ($preview != false) { $previewId = $preview->ID; }
+    }
+ 
+    return $previewId;
+}
+ 
+function get_preview_postmeta($metaValue, $postId, $metaKey, $single)
+{
+    // プレビュー表示のときにmeta情報(custom fileds情報)を、
+    // プレビュー用のmeta情報に置き換える
+    if ($previewId = get_preview_id($postId)) {
+        if ($postId != $previewId) {
+            $metaValue = get_post_meta($previewId, $metaKey, $single);
+        }
+    }
+ 
+    return $metaValue;
+}
+
+if (!empty($_GET['preview'])) {
+    add_filter('get_post_metadata', 'get_preview_postmeta', 10, 4);
+}
