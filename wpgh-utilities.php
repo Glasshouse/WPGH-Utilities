@@ -31,3 +31,4 @@ remove_action( 'wp_head', 'feed_links_extra', 3 );
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/wpml.php';
 require_once __DIR__ . '/tinymce.php';
+require_once __DIR__ . 'security.php';
