@@ -21,14 +21,14 @@
 
 define('TEMPLATE_URL', get_template_directory_uri());
 
-remove_action( 'wp_head', 'rsd_link' );
-remove_action( 'wp_head', 'wlwmanifest_link' );
-remove_action( 'wp_head', 'wp_shortlink_wp_head' );
-remove_action( 'template_redirect', 'wp_shortlink_header', 11 );
-remove_action( 'wp_head', 'feed_links', 2 );
-remove_action( 'wp_head', 'feed_links_extra', 3 );
-
+add_action('init', 'wpgh_utilities_init');
+function wpgh_utilities_init()
+{
 require_once __DIR__ . '/functions.php';
-require_once __DIR__ . '/wpml.php';
 require_once __DIR__ . '/tinymce.php';
 require_once __DIR__ . '/security.php';
+
+    if (is_plugin_active('sitepress-multilingual-cms')) {
+        require_once __DIR__ . '/wpml.php';
+    }
+}
