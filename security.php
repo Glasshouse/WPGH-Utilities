@@ -13,3 +13,11 @@ add_filter('oembed_response_data', function($data){
 
     return $data;
 });
+
+add_action('wp_head', 'wpgh_utilities_remove_generator_tag', 1);
+function wpgh_utilities_remove_generator_tag()
+{
+    global $sitepress;
+    remove_action( 'wp_head', array( $sitepress, 'meta_generator_tag' ) );
+    remove_action('wp_head', 'wp_generator');
+}

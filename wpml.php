@@ -7,7 +7,7 @@
  * @global SitePress $sitepress
  * @param string $template_filename
  * @param array $opt
- * @return string|int|object L'url ou l'identifiant ou l'objet page recherché
+ * @return string|int|object L'url ou l'identifiant ou l'objet page recherchï¿½
  */
 function gh_get_page_by_template($template_filename, $opt = array())
 {
@@ -75,7 +75,7 @@ function gh_get_page_by_template($template_filename, $opt = array())
 }
 
 
-function lon_get_post_url_by_template($template_filename, $post_type, $lang = null) {
+function gh_get_post_url_by_template($template_filename, $post_type, $lang = null) {
     global $_gh_urls, $wpdb, $sitepress;
 
     // on initialise le cache s'il n'existe pas
@@ -108,14 +108,6 @@ function lon_get_post_url_by_template($template_filename, $post_type, $lang = nu
     }
 
     return $url;
-}
-
-add_action('wp_head', 'lon_wpml_after_startup', 1);
-function lon_wpml_after_startup()
-{
-    global $sitepress;
-    remove_action( 'wp_head', array( $sitepress, 'meta_generator_tag' ) );
-    remove_action('wp_head', 'wp_generator');
 }
 
 function getLanguageSwitcherItems()
@@ -179,7 +171,7 @@ if (!function_exists('wpml_get_translations')) {
 }
 
 
-// TO AVOID BD BREAK AND LEGACY
+// TO AVOID BC BREAK AND KEEP LEGACY
 function gh_get_page_url_by_template($template_filename, $opt = array())
 {
 	return gh_get_page_by_template($template_filename, $opt);
