@@ -1,9 +1,9 @@
 <?php
 /**
  * Plugin Name: Glasshouse Utilities
- * Plugin URI: http://www.glasshouse.fr
+ * Plugin URI: https://github.com/Glasshouse/WPGH-Utilities
  * Description: Some useful functions that we use in pretty much every Wordpress website we do
- * Version: 1.0.1
+ * Version: 1.0.2
  * Author: Paul BERNARD
  * Author URI: http://www.glasshouse.fr
  *
