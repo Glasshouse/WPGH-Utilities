@@ -42,7 +42,7 @@ function wpgh_utilities_init()
             'zip_url' => 'https://github.com/Glasshouse/WPGH-Utilities/zipball/main', // the zip url of the GitHub repo
             'sslverify' => true, // whether WP should check the validity of the SSL cert when getting an update, see https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/2 and https://github.com/jkudish/WordPress-GitHub-Plugin-Updater/issues/4 for details
             'requires' => '5.0', // which version of WordPress does your plugin require?
-            'tested' => '5..0', // which version of WordPress is your plugin tested up to?
+            'tested' => '5.0', // which version of WordPress is your plugin tested up to?
             'readme' => 'README.md', // which file to use as the readme for the version number
             'access_token' => '', // Access private repositories by authorizing under Plugins > GitHub Updates when this example plugin is installed
         );
