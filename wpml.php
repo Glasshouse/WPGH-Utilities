@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Plugin Name: Glasshouse Utilities for WPML
+ * Plugin URI: http://www.glasshouse.fr
+ * Description: Some useful functions for WPML
+ * Version: 1.0
+ * Author: Paul BERNARD
+ * Author URI: http://www.glasshouse.fr
+ *
+ *
+ * @package Glasshouse
+ * @version 1.0
+ * @author Paul BERNARD <paul@glasshouse.fr>
+ * @copyright Copyright (c) 2015 Glasshouse
+ * @link http://www.glasshouse.fr
+ * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+ *
+ */
+
+/**
  *
  * @global array $_gh_urls
  * @global wpdb $wpdb

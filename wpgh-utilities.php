@@ -3,19 +3,18 @@
  * Plugin Name: Glasshouse Utilities
  * Plugin URI: http://www.glasshouse.fr
  * Description: Some useful functions that we use in pretty much every Wordpress website we do
- * Version: 0.1
+ * Version: 1.0
  * Author: Paul BERNARD
  * Author URI: http://www.glasshouse.fr
  *
  *
  * @package Glasshouse
- * @version 0.1
+ * @version 1.0
  * @author Paul BERNARD <paul@glasshouse.fr>
  * @copyright Copyright (c) 2015 Glasshouse
  * @link http://www.glasshouse.fr
  * @license http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
- * 
- * @todo Charger wpml uniquement si le plugin WPML est activé, est-ce possible à ce stade ? 
+ *
  * @todo Charger le script pour tinymce uniquement si le plugin ACF est activé, est-ce possible à ce stade ?
  */
 
@@ -30,8 +29,4 @@ function wpgh_utilities_init()
     require_once __DIR__ . '/security.php';
 
     disable_emojis();
-
-    if (is_plugin_active('sitepress-multilingual-cms')) {
-        require_once __DIR__ . '/wpml.php';
-    }
 }
