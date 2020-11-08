@@ -3,7 +3,7 @@
  * Plugin Name: Glasshouse Utilities
  * Plugin URI: http://www.glasshouse.fr
  * Description: Some useful functions that we use in pretty much every Wordpress website we do
- * Version: 1.0
+ * Version: 1.0.1
  * Author: Paul BERNARD
  * Author URI: http://www.glasshouse.fr
  *
