@@ -62,7 +62,11 @@ function gh_get_page_by_template($template_filename, $opt = array())
             if ($element_lang_details->language_code == $lang)
                 $url = get_permalink($mid);
             else {
-                $mtid = $wpdb->get_var("SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE element_type='post_page' AND trid='" . $element_lang_details->trid . "' AND language_code='" . $lang . "'");
+                $mtid = $wpdb->get_var($wpdb->prepare(
+                    "SELECT element_id FROM {$wpdb->prefix}icl_translations WHERE element_type='post_page' AND trid = %d AND language_code = %s",
+                    (int) $element_lang_details->trid,
+                    $lang
+                ));
                 //$mtid = $sitepress->get_translation_id($element_lang_details->trid, ICL_LANGUAGE_CODE);
                 if ($mtid) {
                     $url = get_permalink($mtid);
@@ -110,11 +114,11 @@ function gh_get_post_url_by_template($template_filename, $post_type, $lang = nul
         $sql = "SELECT pm.post_id
                 FROM {$wpdb->postmeta} pm
                 LEFT JOIN {$wpdb->prefix}icl_translations icl
-                  ON pm.post_id = icl.element_id AND icl.element_type = 'post_$post_type'
+                  ON pm.post_id = icl.element_id AND icl.element_type = %s
                 WHERE (meta_key = 'template')
                   AND meta_value = %s
                   AND icl.language_code = %s";
-        $sql = $wpdb->prepare($sql, $template_filename, $lang);
+        $sql = $wpdb->prepare($sql, 'post_' . $post_type, $template_filename, $lang);
         $pid = $wpdb->get_var($sql);
 
         if (!$pid) {
@@ -143,15 +147,17 @@ function getLanguageSwitcherItems()
 if (!function_exists('wpml_get_translation')) {
     function wpml_get_translation($element_id, $element_type, $language_code=null) {
         global $wpdb;
-        $sql = "SELECT icl1.element_id
+        // Identifiant forcé en entier, chaînes passées via prepare()
+        $element_id = (int) $element_id;
+        $sql = $wpdb->prepare("SELECT icl1.element_id
                 FROM `{$wpdb->prefix}icl_translations` icl1
                 LEFT JOIN `{$wpdb->prefix}icl_translations` icl2 ON icl1.trid = icl2.trid
-                AND icl1.element_type = '{$element_type}'
-                WHERE icl2.element_id = {$element_id} 
-                ";
-                
+                AND icl1.element_type = %s
+                WHERE icl2.element_id = %d
+                ", $element_type, $element_id);
+
         if(!empty($language_code)){ //fonction d'origine
-            $sql.=" AND icl1.language_code = '{$language_code}'";
+            $sql .= $wpdb->prepare(" AND icl1.language_code = %s", $language_code);
             $translated_id = $wpdb->get_var($sql);
             return $translated_id ? $translated_id : $element_id;
         }                
@@ -168,16 +174,18 @@ if (!function_exists('wpml_get_translation')) {
 if (!function_exists('wpml_get_translations')) {
     function wpml_get_translations($element_id, $element_type, $language_code=null) {
         global $wpdb;
-        $sql = "SELECT icl1.element_id as ID, icl1.language_code
+        // Identifiant forcé en entier, chaînes passées via prepare()
+        $element_id = (int) $element_id;
+        $sql = $wpdb->prepare("SELECT icl1.element_id as ID, icl1.language_code
                 FROM `{$wpdb->prefix}icl_translations` icl1
                 LEFT JOIN `{$wpdb->prefix}icl_translations` icl2 ON icl1.trid = icl2.trid
-                AND icl1.element_type = '{$element_type}'
-                WHERE icl2.element_id = {$element_id}
-				  AND icl1.element_id != {$element_id}
-                ";
-                
+                AND icl1.element_type = %s
+                WHERE icl2.element_id = %d
+				  AND icl1.element_id != %d
+                ", $element_type, $element_id, $element_id);
+
         if(!empty($language_code)){ //fonction d'origine
-            $sql .= " AND icl1.language_code = '{$language_code}'";
+            $sql .= $wpdb->prepare(" AND icl1.language_code = %s", $language_code);
             $translated_id = $wpdb->get_row($sql, ARRAY_A);
             return $translated_id ? $translated_id : $element_id;
         }                
