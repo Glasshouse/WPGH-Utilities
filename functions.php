@@ -13,11 +13,12 @@ if (!function_exists('get_post_meta_all')) {
 
 		$data = array();
 
-		$wpdb->query("
+		// Requête préparée : post_id forcé en entier
+		$wpdb->query($wpdb->prepare("
 			SELECT `meta_key`, `meta_value`
 			FROM $wpdb->postmeta
-			WHERE `post_id` = $post_id
-		");
+			WHERE `post_id` = %d
+		", (int) $post_id));
 
 		foreach($wpdb->last_result as $k => $v){
 			$data[$v->meta_key] =   $v->meta_value;
@@ -72,10 +73,28 @@ add_filter('single_template', 'wpgh_single_template');
 function wpgh_single_template($single) {
 	global $post;
 
+    if (empty($post->ID)) {
+        return $single;
+    }
+
     $template = get_post_meta($post->ID, 'template', true);
 
-    if (!empty($template) && file_exists(TEMPLATEPATH . '/' . $template)) {
-        return TEMPLATEPATH . '/' . $template;
+    // Seul un nom de fichier simple est accepté (pas de sous-dossier, pas de "..")
+    if (!is_string($template) || !preg_match('/^[A-Za-z0-9_-]+\.php$/', $template)) {
+        return $single;
+    }
+
+    $path = realpath(TEMPLATEPATH . '/' . $template);
+    if ($path === false || !is_file($path)) {
+        return $single;
+    }
+
+    // Le fichier résolu doit rester dans le dossier du thème (parent ou enfant)
+    foreach (array(get_template_directory(), get_stylesheet_directory()) as $root) {
+        $root = realpath($root);
+        if ($root !== false && strpos($path, rtrim($root, '/\\') . DIRECTORY_SEPARATOR) === 0) {
+            return $path;
+        }
     }
 
     return $single;
@@ -302,7 +321,8 @@ function get_preview_id($postId)
     global $post;
     $previewId = 0;
  
-    if ( $post->ID == $postId && $_GET['preview'] == true ) {
+    // Aperçu réservé aux utilisateurs autorisés à éditer le contenu (sinon fuite des brouillons)
+    if ( isset($post->ID) && $post->ID == $postId && !empty($_GET['preview']) && current_user_can('edit_post', $postId) ) {
         // プレビュー表示の際に、自動保存されたpostの下書き情報を取得する
         $preview = wp_get_post_autosave($postId);
         if ($preview != false) { $previewId = $preview->ID; }
